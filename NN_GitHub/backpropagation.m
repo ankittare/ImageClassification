@@ -1,16 +1,11 @@
 function [w1,w2] = backpropagation(x,h,o,t,w1,w2)
+% w1 is feature*num_hu; w2 is num_hu*num_cls
 stepsize = 0.1;
 feature = length(x);
 num_cls = length(o);
 num_hu = length(h);
-d_o = zeros(1,num_cls);
-d_h = zeros(1,num_hu);
-for i = 1:num_cls
-    d_o(i) = o(1)*(1-o(1))*(t(i)-o(i));
-end
-for i = num_hu
-    d_h(i) = h(i)*(1-h(i))*(w2(i,:)*d_o');
-end
+d_o = o.*(1-o).*(t-o);
+d_h = h.*(1-h).*(w2*d_o')';
 for i=1:num_hu
     for j = 1:num_cls
         w2(i,j) = w2(i,j) + stepsize*d_o(j)*h(i);
